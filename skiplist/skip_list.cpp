@@ -137,14 +137,17 @@ int SkipList::remove(KeyType key) {
 ValueType* SkipList::search(KeyType key) {
 
     Node* cur = NULL;
+    Node* prefix = _head;
     for (int i = _level; i >= 0; --i) {
-        cur = _head->forward[i];
+        cur = prefix->forward[i];
         while (cur != NULL && cur->key < key) {
+            prefix = cur;
             cur = cur->forward[i];
         }
+        
         if (cur != NULL && cur->key == key) {
             return &(cur->value);
-        }
+        } 
     }
 
     return NULL;
