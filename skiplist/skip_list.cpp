@@ -140,8 +140,8 @@ int SkipList::remove(KeyType key) {
     return 0;
 }
 
+// O(logN) time
 ValueType* SkipList::search(KeyType key) {
-
     Node* cur = NULL;
     Node* prefix = _head;
     for (int i = _level; i >= 0; --i) {
@@ -157,6 +157,66 @@ ValueType* SkipList::search(KeyType key) {
     }
 
     return NULL;
+}
+
+bool SkipList::contains(KeyType key) {
+    ValueType* v_p = search(key);
+
+    return (v_p != NULL) ? true : false;
+}
+
+Node* SkipList::find_last() {
+    Node* cur = NULL;
+    Node* prefix = _head;
+    for (int i = _level; i >= 0; --i) {
+        cur = prefix->forward[i];
+        while(cur != NULL) {
+            prefix = cur;
+            cur = cur->forward[i];
+        }
+    }
+
+    if (prefix == _head) {
+        return NULL;
+    }
+
+    return prefix;
+}
+
+// O(logN) time
+Node* SkipList::find_less_than(KeyType key) {
+    Node* cur = NULL;
+    Node* prefix = _head;
+    for (int i = _level; i >= 0; --i) {
+        cur = prefix->forward[i];
+        while(cur != NULL && cur->key < key) {
+            prefix = cur;
+            cur = cur->forward[i];
+        }
+    }
+    if (prefix == _head) {
+        return NULL;
+    }
+
+    return prefix;
+}
+
+// O(logN) time
+Node* SkipList::find_greater_or_equal(KeyType key) {
+    Node* cur = NULL;
+    Node* prefix = _head;
+    for (int i = _level; i >= 0; --i) {
+        cur = prefix->forward[i];
+        while (cur != NULL && cur->key < key) {
+            prefix = cur;
+            cur = cur->forward[i];
+        }
+        if (cur != NULL && cur->key == key) {
+            return cur;
+        }
+    }
+
+    return cur;
 }
 
 std::string SkipList::to_str() {
