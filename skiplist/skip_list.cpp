@@ -193,13 +193,15 @@ int SkipList::random_level() {
     return level;
 }
 
+// alloc a Node which has #level of Node* pointers.
 Node* SkipList::create_node(int level, KeyType key, ValueType value) {
     if (level <= 0) {
         fprintf(stderr, "not legal level: %d", level);
         return NULL;
     }
 
-    Node* node = (Node*)malloc(sizeof(Node) + sizeof(Node*) * level);
+    // here choose level-1 because there already exists a Node* pointer in Node.
+    Node* node = (Node*)malloc(sizeof(Node) + sizeof(Node*) * (level-1));
     if (node == NULL) {
         fprintf(stderr, "malloc fail, level: %d", level);
         return NULL;
