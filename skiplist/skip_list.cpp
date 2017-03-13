@@ -64,8 +64,10 @@ int SkipList::insert(KeyType key, ValueType value) {
        return -1;
     }
 
-    Node* prefix[level];
-    for (int i = level - 1; i >= 0; --i) {
+    Node* prefix[_max_level];
+    // start from _level, because level may be smaller than _level such as level=1, then
+    // from _level will be fast to find the appropriate location.
+    for (int i = _level; i >= 0; --i) {
         Node* cur = _head->forward[i];
         Node* p = _head;
         while (cur != NULL && cur->key < key) {
@@ -78,6 +80,10 @@ int SkipList::insert(KeyType key, ValueType value) {
             return 1;
         }
         prefix[i] = p;
+    }
+    // level-1 may be larger than _level
+    for (int i = _max_level-1; i > _level; i--) {
+        prefix[i] = _head;
     }
 
     for (int i = level - 1; i >= 0; --i) {
