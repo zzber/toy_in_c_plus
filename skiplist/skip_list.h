@@ -52,6 +52,23 @@ public:
 
     ValueType* search(KeyType key);
 
+    bool contains(KeyType key);
+
+    /*
+     * find the last node, may be NULL
+     */
+    Node* find_last();
+
+    /*
+     * find the last node that is less than key
+     */
+    Node* find_less_than(KeyType key);
+    
+    /*
+     * find the equal node or the first larger node
+     */ 
+    Node* find_greater_or_equal(KeyType key);
+
     std::string to_str();
 private:
     int random_level();
